@@ -28,6 +28,8 @@ jobs:
 
       - name: Build .so with CMake directly
         run: |
+          export VCPKG_DEFAULT_TRIPLET=arm64-android
+          export VCPKG_TARGET_TRIPLET=arm64-android
           cmake -B build-android \
             -G Ninja \
             -DCMAKE_TOOLCHAIN_FILE=$ANDROID_NDK_HOME/build/cmake/android.toolchain.cmake \
