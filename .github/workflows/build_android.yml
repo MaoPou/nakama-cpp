@@ -12,24 +12,17 @@ jobs:
           path: nakama-cpp
           submodules: false
 
-      - name: Checkout vcpkg submodule
-        run: |
-          git submodule update --init --filter=blob:none -- submodules/vcpkg
-        working-directory: nakama-cpp
-
       - uses: ./nakama-cpp/.github/actions/setup-android
         with:
           ndk-version: 27.2.12479018
           cmake-version: 4.0.2
-      
-      - uses: ./nakama-cpp/.github/actions/setup-vcpkg-android
-        with:
-          vcpkg-path: nakama-cpp/submodules/vcpkg
+
+      - name: Install rapidjson (header-only)
+        run: |
+          git clone https://github.com/Tencent/rapidjson.git /tmp/rapidjson
 
       - name: Build .so with CMake directly
         run: |
-          export VCPKG_DEFAULT_TRIPLET=arm64-android
-          export VCPKG_TARGET_TRIPLET=arm64-android
           cmake -B build-android \
             -G Ninja \
             -DCMAKE_TOOLCHAIN_FILE=$ANDROID_NDK_HOME/build/cmake/android.toolchain.cmake \
@@ -39,7 +32,10 @@ jobs:
             -DBUILD_C_API=ON \
             -DBUILD_SHARED_LIBS=ON \
             -DWITH_HTTP_CURL=OFF \
-            -DWITH_WS_WSLAY=OFF
+            -DWITH_WS_WSLAY=OFF \
+            -DRapidJSON_DIR=/tmp/rapidjson \
+            -DCMAKE_DISABLE_FIND_PACKAGE_Vcpkg=ON \
+            -DVCPKG_MANIFEST_FEATURES=""
           cmake --build build-android
         working-directory: nakama-cpp
 
