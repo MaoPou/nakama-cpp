@@ -63,9 +63,10 @@ android {
         externalNativeBuild {
             cmake {
                 arguments += listOf(
-                    "-DANDROID_STL=c++_shared",
-                    "-DINSIDE_GRADLE=ON",  // this is picked up by our CMake to interpose VCPKG toolchain
-                    "-DANDROID_SUPPORT_FLEXIBLE_PAGE_SIZES=ON",
+                   "-DANDROID_STL=c++_shared",
+                   "-DINSIDE_GRADLE=ON",
+                   "-DANDROID_SUPPORT_FLEXIBLE_PAGE_SIZES=ON",
+                   "-DBUILD_C_API=ON",
                 )
                 targets("nakama-sdk")
             }
